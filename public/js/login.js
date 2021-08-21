@@ -1,3 +1,4 @@
+import { ajax } from "./ajax.js";
 
 const formMessageDOM = document.querySelector('.form-messages');
 const pFormMessageDOM = formMessageDOM.querySelector('.message');
@@ -35,7 +36,28 @@ function submitFormInfo(e) {
         return showMessage('error', `"Password" negali buti trumpesnis nei ${minimumPasswordLength} simboliai`);
     }
 
-    showMessage('success', 'Tau pavyko!');
+    closeMessage();
+    ajax({
+        method: 'POST',
+        headers: {},
+        endpoint: 'api/users',
+        data: { email, password: pass }
+    }, responseAction);
+}
+
+function responseAction(response) {
+    try {
+        const responseObject = JSON.parse(response);
+        // {error: "Message"}
+        // {success: "Message"}
+        const keys = Object.keys(responseObject);
+        // ['error']
+        // ['success']
+        const key = keys[0];
+        showMessage(key, responseObject[key]);
+    } catch (error) {
+        showMessage('error', 'Serverio klaida!');
+    }
 }
 
 closeMessageDOM.addEventListener('click', closeMessage);

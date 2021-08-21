@@ -1,3 +1,5 @@
+import { ajax } from "./ajax.js";
+
 const formMessageDOM = document.querySelector('.form-messages');
 const pFormMessageDOM = formMessageDOM.querySelector('.message');
 const closeMessageDOM = formMessageDOM.querySelector('.close');
@@ -47,7 +49,28 @@ function submitFormInfo(e) {
         return showMessage('error', 'Nesutampa "Password" ir "Repeat password"');
     }
 
-    showMessage('success', 'Tau pavyko!');
+    closeMessage();
+    ajax({
+        method: 'POST',
+        headers: {},
+        endpoint: 'api/users',
+        data: { username, email, password: pass }
+    }, responseAction);
+}
+
+function responseAction(response) {
+    try {
+        const responseObject = JSON.parse(response);
+        // {error: "Message"}
+        // {success: "Message"}
+        const keys = Object.keys(responseObject);
+        // ['error']
+        // ['success']
+        const key = keys[0];
+        showMessage(key, responseObject[key]);
+    } catch (error) {
+        showMessage('error', 'Serverio klaida!');
+    }
 }
 
 closeMessageDOM.addEventListener('click', closeMessage);
