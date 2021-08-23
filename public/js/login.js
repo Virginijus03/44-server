@@ -1,3 +1,4 @@
+
 import { ajax } from "./ajax.js";
 
 const formMessageDOM = document.querySelector('.form-messages');
@@ -40,7 +41,7 @@ function submitFormInfo(e) {
     ajax({
         method: 'POST',
         headers: {},
-        endpoint: 'api/users',
+        endpoint: 'api/token',
         data: { email, password: pass }
     }, responseAction);
 }
@@ -48,13 +49,8 @@ function submitFormInfo(e) {
 function responseAction(response) {
     try {
         const responseObject = JSON.parse(response);
-        // {error: "Message"}
-        // {success: "Message"}
-        const keys = Object.keys(responseObject);
-        // ['error']
-        // ['success']
-        const key = keys[0];
-        showMessage(key, responseObject[key]);
+        localStorage.setItem('login-token', responseObject.token);
+        showMessage('success', 'Token gautas ;)');
     } catch (error) {
         showMessage('error', 'Serverio klaida!');
     }
