@@ -50,10 +50,13 @@ function responseAction(response) {
         const responseObject = JSON.parse(response);
         if (responseObject.error) {
             localStorage.removeItem('login-token');
-            showMessage('error', responseObject.error)
+            showMessage('error', responseObject.error);
         }
         localStorage.setItem('login-token', responseObject.token);
         showMessage('success', 'Token gautas ;)');
+        setTimeout(() => {
+            location.href = '/admin';
+        }, 2000)
     } catch (error) {
         showMessage('error', 'Serverio klaida!');
     }
