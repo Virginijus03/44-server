@@ -55,6 +55,9 @@ function submitFormInfo(e) {
         if (serviceName === '') {
             return showMessage('error', '"ServiceName" negali buti tuscias');
         }
+        if (urlSlug === '') {
+            return showMessage('error', '"UrlSlug" negali buti tuscias');
+        }
     }
 
 
